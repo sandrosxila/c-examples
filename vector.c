@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -8,7 +9,7 @@ typedef struct
   int *buffer;
 } Vector;
 
-Vector *new_vector()
+Vector *vector_create()
 {
   Vector *v = (Vector *)malloc(sizeof(Vector));
   v->size = 0;
@@ -17,7 +18,7 @@ Vector *new_vector()
   return v;
 }
 
-void append(Vector *v, int element)
+void vector_append(Vector *v, int element)
 {
   if (v->size + 1 > v->capacity)
   {
@@ -28,34 +29,60 @@ void append(Vector *v, int element)
   v->buffer[v->size++] = element;
 }
 
-int pop_back(Vector *v)
+int vector_pop_back(Vector *v)
 {
   return v->buffer[--v->size];
 }
 
-int get(Vector *v, int index)
+int vector_get(Vector *v, int index)
 {
+  if (index >= v->size)
+  {
+    fprintf(stderr, "index is out of bounds");
+
+    exit(EXIT_FAILURE);
+  }
+
   return v->buffer[index];
 }
 
-int set(Vector *v, int index, int value)
+int vector_set(Vector *v, int index, int value)
 {
+  if (index >= v->size)
+  {
+    fprintf(stderr, "index is out of bounds");
+
+    exit(EXIT_FAILURE);
+  }
+
   return v->buffer[index] = value;
 }
 
-bool is_empty(Vector *v) {
+bool vector_empty(Vector *v)
+{
   return v->size == 0;
 }
 
-int len(Vector *v) {
+int vector_size(Vector *v)
+{
   return v->size;
 }
 
-int back(Vector *v){
+int vector_back(Vector *v)
+{
   return v->buffer[v->size - 1];
 }
 
-void delete_vector(Vector *v) {
+void vector_clear(Vector *v)
+{
+  v->size = 0;
+  v->capacity = 1;
+  free(v->buffer);
+  v->buffer = (int *)malloc(v->capacity * sizeof(int));
+}
+
+void vector_destroy(Vector *v)
+{
   free(v->buffer);
   free(v);
 }

@@ -4,32 +4,43 @@
 
 typedef struct Vector Stack;
 
-Stack *new_stack()
+Stack *stack_create()
 {
-  Stack* s = new_vector();
+  Stack *s = vector_create();
   return s;
 }
 
-int pop(Stack* s){
-  return pop_back(s);
+int stack_pop(Stack *s)
+{
+  return vector_pop_back(s);
 }
 
-void push(Stack* s, int element){
-  append(s, element);
+void stack_push(Stack *s, int element)
+{
+  vector_append(s, element);
 }
 
-bool empty(Stack* s) {
-  return len(s) == 0;
+bool stack_empty(Stack *s)
+{
+  return vector_empty();
 }
 
-int size(Stack *s){
-  return len(s);
+int stack_size(Stack *s)
+{
+  return vector_size(s);
 }
 
-int top(Stack* s){
-  return back(s);
+int stack_top(Stack *s)
+{
+  return vector_back(s);
 }
 
-void delete_stack(Stack* s) {
-  delete_vector(s);
+void stack_clear(Stack *s)
+{
+  vector_clear(s);
+}
+
+void stack_destroy(Stack *s)
+{
+  vector_destroy(s);
 }
