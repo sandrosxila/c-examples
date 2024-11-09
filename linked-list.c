@@ -12,7 +12,7 @@ typedef struct {
     int size;
 } List;
 
-Node* create_node(int value) {
+static Node* create_node(int value) {
     // allocating new node on heap
     Node *newNode = (Node*)malloc(sizeof(Node));
 
@@ -31,7 +31,7 @@ Node* create_node(int value) {
     return newNode;
 }
 
-void add_item(Node* head, int value) {
+static void add_item(Node* head, int value) {
     Node *last = head; // declare the last element as first
 
     // searching for the last element
@@ -43,7 +43,7 @@ void add_item(Node* head, int value) {
     last->next = create_node(value);
 }
 
-Node *get_item(Node* head, int pos) {
+static Node *get_item(Node* head, int pos) {
     for(Node* current = head; current != NULL && pos >= 0; current = current->next, pos--){
         if(pos == 0){
             return current;
@@ -53,7 +53,7 @@ Node *get_item(Node* head, int pos) {
     return NULL;
 }
 
-bool delete_item(Node** head, int value) {
+static bool delete_item(Node** head, int value) {
     Node *previous = NULL, *current;
 
     // locating the current and previous node
