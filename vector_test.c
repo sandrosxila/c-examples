@@ -11,14 +11,14 @@ void test_vector() {
     assert(vector_size(v) == 0);
 
     // Test appending elements
-    vector_append(v, 10);
-    vector_append(v, 20);
-    vector_append(v, 30);
+    vector_push_back(v, 10);
+    vector_push_back(v, 20);
+    vector_push_back(v, 30);
 
     // Check if values are added correctly and length is updated
-    assert(vector_get(v, 0) == 10);
-    assert(vector_get(v, 1) == 20);
-    assert(vector_get(v, 2) == 30);
+    assert(vector_at(v, 0) == 10);
+    assert(vector_at(v, 1) == 20);
+    assert(vector_at(v, 2) == 30);
     assert(vector_size(v) == 3);
     printf("Append, access, and len test passed!\n");
 
@@ -37,12 +37,12 @@ void test_large_append() {
     int N = 1000000;  // 1 million elements
 
     for (int i = 0; i < N; i++) {
-        vector_append(v, i);
+        vector_push_back(v, i);
     }
 
     // Ensure all elements are in the correct position
     for (int i = 0; i < N; i++) {
-        assert(vector_get(v, i) == i);
+        assert(vector_at(v, i) == i);
     }
 
     assert(vector_size(v) == N);  // Ensure size is correct

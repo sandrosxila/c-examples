@@ -12,17 +12,37 @@ typedef struct
 Vector *vector_create()
 {
   Vector *v = (Vector *)malloc(sizeof(Vector));
+
+  if (v == NULL)
+  {
+    fprintf(stderr, "Memory allocation failed\n");
+    exit(EXIT_FAILURE); // terminate the program
+  }
+
   v->size = 0;
   v->capacity = 1;
   v->buffer = (int *)malloc(v->capacity * sizeof(int));
+
+  if (v->buffer == NULL)
+  {
+    printf("Error: malloc failed to allocate space the vector %p\n", &v);
+    exit(EXIT_FAILURE);
+  }
+
   return v;
 }
 
-void vector_append(Vector *v, int element)
+void vector_push_back(Vector *v, int element)
 {
   if (v->size + 1 > v->capacity)
   {
     v->buffer = (int *)realloc(v->buffer, 2 * v->capacity * sizeof(int));
+
+    if (v->buffer == NULL)
+    {
+      printf("Error: malloc failed to allocate space the vector %p\n", &v);
+      exit(EXIT_FAILURE);
+    }
     v->capacity *= 2;
   }
 
@@ -34,7 +54,7 @@ int vector_pop_back(Vector *v)
   return v->buffer[--v->size];
 }
 
-int vector_get(Vector *v, int index)
+int vector_at(Vector *v, int index)
 {
   if (index >= v->size)
   {
@@ -63,6 +83,11 @@ bool vector_empty(Vector *v)
   return v->size == 0;
 }
 
+int vector_capacity(Vector *v)
+{
+  return v->capacity;
+}
+
 int vector_size(Vector *v)
 {
   return v->size;
@@ -77,12 +102,22 @@ void vector_clear(Vector *v)
 {
   v->size = 0;
   v->capacity = 1;
+
   free(v->buffer);
+
   v->buffer = (int *)malloc(v->capacity * sizeof(int));
+
+  if (v->buffer == NULL)
+  {
+    printf("Error: malloc failed to allocate space the vector %p\n", &v);
+    exit(EXIT_FAILURE);
+  }
 }
 
 void vector_destroy(Vector *v)
 {
   free(v->buffer);
   free(v);
+  
+  v = NULL;
 }

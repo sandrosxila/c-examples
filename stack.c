@@ -16,7 +16,7 @@ int stack_pop(Stack *s)
 
 void stack_push(Stack *s, int element)
 {
-  vector_append(s, element);
+  vector_push_back(s, element);
 }
 
 bool stack_empty(Stack *s)
