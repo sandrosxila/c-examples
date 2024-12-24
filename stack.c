@@ -1,5 +1,4 @@
 #include "vector.h"
-#include <stdlib.h>
 #include <stdbool.h>
 
 typedef struct Vector Stack;
@@ -22,7 +21,7 @@ void stack_push(Stack *s, int element)
 
 bool stack_empty(Stack *s)
 {
-  return vector_empty();
+  return vector_empty(s);
 }
 
 int stack_size(Stack *s)
