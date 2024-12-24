@@ -40,7 +40,7 @@ void vector_push_back(Vector *v, int element)
 
     if (v->buffer == NULL)
     {
-     fprintf(stderr, "Error: malloc failed to allocate space the vector %p\n", &v);
+      fprintf(stderr, "Error: malloc failed to allocate space the vector %p\n", &v);
       exit(EXIT_FAILURE);
     }
     v->capacity *= 2;
@@ -49,8 +49,12 @@ void vector_push_back(Vector *v, int element)
   v->buffer[v->size++] = element;
 }
 
-int vector_pop_back(Vector *v)
-{
+int vector_pop_back(Vector *v) {
+  if (v->size == 0) {
+    fprintf(stderr, "vector is empty");
+    exit(EXIT_FAILURE);
+  }
+
   return v->buffer[--v->size];
 }
 
@@ -118,6 +122,6 @@ void vector_destroy(Vector *v)
 {
   free(v->buffer);
   free(v);
-  
+
   v = NULL;
 }
