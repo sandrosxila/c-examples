@@ -25,7 +25,7 @@ Vector *vector_create()
 
   if (v->buffer == NULL)
   {
-    printf("Error: malloc failed to allocate space the vector %p\n", &v);
+    fprintf(stderr, "Error: malloc failed to allocate space the vector %p\n", &v);
     exit(EXIT_FAILURE);
   }
 
@@ -40,7 +40,7 @@ void vector_push_back(Vector *v, int element)
 
     if (v->buffer == NULL)
     {
-      printf("Error: malloc failed to allocate space the vector %p\n", &v);
+     fprintf(stderr, "Error: malloc failed to allocate space the vector %p\n", &v);
       exit(EXIT_FAILURE);
     }
     v->capacity *= 2;
@@ -109,7 +109,7 @@ void vector_clear(Vector *v)
 
   if (v->buffer == NULL)
   {
-    printf("Error: malloc failed to allocate space the vector %p\n", &v);
+    fprintf(stderr, "Error: malloc failed to allocate space the vector %p\n", &v);
     exit(EXIT_FAILURE);
   }
 }
