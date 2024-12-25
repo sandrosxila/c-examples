@@ -13,7 +13,7 @@ Queue *queue_create()
 {
   Queue* q = malloc(sizeof(Queue));
   if(q == NULL) {
-    printf("Error: malloc failed to allocate space the queue %p\n", &q);
+    fprintf(stderr, "Error: malloc failed to allocate space the queue %p\n", &q);
     exit(EXIT_FAILURE);
   }
 
