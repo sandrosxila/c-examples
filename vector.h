@@ -14,6 +14,7 @@ bool vector_empty(Vector *v);
 int vector_pop_back(Vector *v);
 int vector_at(Vector *v, int index);
 int vector_set(Vector *v, int index, int value);
+int vector_clear(Vector *v);
 void vector_destroy(Vector *v);
 
 #endif // VECTOR_H
