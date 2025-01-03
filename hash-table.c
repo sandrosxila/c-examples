@@ -82,7 +82,7 @@ static void hash_table_rehash(HashTable *hashTable)
         {
             uint64_t hash = hash_key(current->key);
             size_t index = hash % (hashTable->capacity * 2);
-            
+
             nextNode = current->next;
 
             if (index != i)
@@ -114,7 +114,8 @@ static void hash_table_rehash(HashTable *hashTable)
                     }
                 }
             }
-            else {
+            else
+            {
                 previous = current;
             }
         }
@@ -194,34 +195,35 @@ bool hash_table_exists(HashTable *hashTable, const char *key)
 
 bool hash_table_erase(HashTable *hashTable, const char *key)
 {
-    for (size_t i = 0; i < hashTable->capacity; i++)
+    uint64_t hash = hash_key(key);
+    size_t index = hash % hashTable->capacity;
+
+    for (Item *current = hashTable->items[index], *previous = NULL; current != NULL; previous = current, current = current->next)
     {
-        for (Item *current = hashTable->items[i], *previous = NULL; current != NULL; previous = current, current = current->next)
+        if (strcmp(current->key, key) == 0)
         {
-            if (strcmp(current->key, key) == 0)
+            if (previous == NULL)
             {
-                if (previous == NULL)
-                {
-                    hashTable->items[i] = hashTable->items[i]->next;
-                }
-                else
-                {
-                    previous->next = current->next;
-                }
-
-                current->next = NULL;
-                free(current);
-                hashTable->size--;
-
-                return true;
+                hashTable->items[index] = hashTable->items[index]->next;
             }
+            else
+            {
+                previous->next = current->next;
+            }
+
+            current->next = NULL;
+            free(current);
+            hashTable->size--;
+
+            return true;
         }
     }
 
     return false;
 }
 
-size_t hash_table_size(HashTable* hashTable) {
+size_t hash_table_size(HashTable *hashTable)
+{
     return hashTable->size;
 }
 
@@ -275,11 +277,12 @@ Item *hash_table_begin(HashTableIterator *it)
 
 Item *hash_table_next(HashTableIterator *it)
 {
-    if(it->item->next != NULL) {
+    if (it->item->next != NULL)
+    {
         it->item = it->item->next;
         return it->item;
     }
-    
+
     for (size_t i = it->index + 1; i < it->hashTable->capacity; i++)
     {
         for (Item *current = it->hashTable->items[i]; current != NULL; current = current->next)
