@@ -9,7 +9,7 @@
 
 typedef struct Item
 {
-    const char *key;
+    char *key;
     int value;
     struct Item *next;
 } Item;
@@ -60,7 +60,8 @@ Item *item_create(const char *key, int value)
         exit(EXIT_FAILURE);
     }
 
-    item->key = key;
+    item->key = malloc(strlen(key) + 1);
+    strcpy(item->key, key);
     item->value = value;
     item->next = NULL;
 
@@ -234,6 +235,7 @@ void hash_table_destroy(HashTable *hashTable)
         for (Item *current = hashTable->items[i], *nextNode; current != NULL; current = nextNode)
         {
             nextNode = current->next;
+            free(current->key);
             free(current);
         }
     }
