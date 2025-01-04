@@ -10,7 +10,7 @@
 typedef struct Item
 {
     const char *key;
-    int value;
+    const int value;
 } Item;
 typedef struct HashTable HashTable;
 typedef struct HashTableIterator HashTableIterator;
