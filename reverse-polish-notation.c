@@ -19,7 +19,6 @@ int calculate(char operator, int a, int b){
 }
 
 int main() {
-
   char expr[] = "50 3 4 + 5 * -";
   int stack[100], top = 0;
 
@@ -28,20 +27,17 @@ int main() {
     if (op == '+' || op == '-' || op == '*' || op == '/'){
       int result = calculate(op, stack[--top], stack[--top]);
       stack[top++] = result;
-    }
-    else {
+    } else {
       stack[top++] = atoi(token);
     }
   }
 
   if(top != 1){
     printf("incorrect expression!\n");
-    return 0;
+  } else {
+    int res = stack[0];
+    printf("%d\n", res);
   }
-
-  int res = stack[0];
-
-  printf("%d\n", res);
-
+  
   return 0;
 }
