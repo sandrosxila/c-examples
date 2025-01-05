@@ -23,7 +23,7 @@ int main() {
   int stack[100], top = 0;
 
   for(char* token = strtok(expr, " "); token != NULL; token = strtok(NULL, " ")){
-    char op = token[0];
+    char op = strlen(token) == 1 ? token[0] : '\0';
     if (op == '+' || op == '-' || op == '*' || op == '/'){
       int result = calculate(op, stack[--top], stack[--top]);
       stack[top++] = result;
