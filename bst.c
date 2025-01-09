@@ -16,6 +16,10 @@ typedef struct {
 
 Node *node_create(int value) {
     Node *node = malloc(sizeof(Node));
+    if(node == NULL) {
+        fprintf(stderr, "Memory Allocation failed for BST Node.\n");
+        exit(EXIT_FAILURE); // terminate the program
+    }
     
     node->value = value;
     node->left = NULL;
@@ -26,6 +30,11 @@ Node *node_create(int value) {
 
 BST *bst_create() {
     BST *bst = malloc(sizeof(BST));
+    if(bst == NULL) {
+        fprintf(stderr, "Memory Allocation failed for BST.\n");
+        exit(EXIT_FAILURE); // terminate the program
+    }
+    
     bst->root = NULL;
     bst->size = 0;
 
