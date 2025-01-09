@@ -1,158 +1,191 @@
-#include <stdio.h>
+#include <limits.h>
+#include <stdbool.h>
 #include <stdlib.h>
- 
-// An AVL tree node
-struct node {
-    int key;
-    struct node *left;
-    struct node *right;
-    int height;
-};
- 
-// A utility function to get maximum of two integers
-int max(int a, int b);
- 
-// A utility function to get height of the tree
-int height(struct node *N) {
-    if (N == NULL)
-        return 0;
-    return N->height;
-}
- 
-// A utility function to get maximum of two integers
-int max(int a, int b) {
-    return (a > b) ? a : b;
-}
- 
-/* Helper function that allocates a new node with the given key and
- NULL left and right pointers. */
-struct node* newNode(int key) {
-    struct node* node = (struct node*) malloc(sizeof(struct node));
-    node->key = key;
+#include <stdio.h>
+
+typedef struct Node {
+    int value;
+    struct Node* right;
+    struct Node* left;
+} Node;
+
+typedef struct {
+    Node *root;
+    int size;
+} BST;
+
+Node *node_create(int value) {
+    Node *node = malloc(sizeof(Node));
+    
+    node->value = value;
     node->left = NULL;
     node->right = NULL;
-    node->height = 1; // new node is initially added at leaf
-    return (node);
-}
- 
-// A utility function to right rotate subtree rooted with y
-// See the diagram given above.
-struct node *rightRotate(struct node *y) {
-    struct node *x = y->left;
-    struct node *T2 = x->right;
- 
-    // Perform rotation
-    x->right = y;
-    y->left = T2;
- 
-    // Update heights
-    y->height = max(height(y->left), height(y->right)) + 1;
-    x->height = max(height(x->left), height(x->right)) + 1;
- 
-    // Return new root
-    return x;
-}
- 
-// A utility function to left rotate subtree rooted with x
-// See the diagram given above.
-struct node *leftRotate(struct node *x) {
-    struct node *y = x->right;
-    struct node *T2 = y->left;
- 
-    // Perform rotation
-    y->left = x;
-    x->right = T2;
- 
-    //  Update heights
-    x->height = max(height(x->left), height(x->right)) + 1;
-    y->height = max(height(y->left), height(y->right)) + 1;
- 
-    // Return new root
-    return y;
-}
- 
-// Get Balance factor of node N
-int getBalance(struct node *N) {
-    if (N == NULL)
-        return 0;
-    return height(N->left) - height(N->right);
-}
- 
-struct node* insert(struct node* node, int key) {
-    /* 1.  Perform the normal BST rotation */
-    if (node == NULL)
-        return (newNode(key));
- 
-    if (key < node->key)
-        node->left = insert(node->left, key);
-    else
-        node->right = insert(node->right, key);
- 
-    /* 2. Update height of this ancestor node */
-    node->height = max(height(node->left), height(node->right)) + 1;
- 
-    /* 3. Get the balance factor of this ancestor node to check whether
-     this node became unbalanced */
-    int balance = getBalance(node);
- 
-    // If this node becomes unbalanced, then there are 4 cases
- 
-    // Left Left Case
-    if (balance > 1 && key < node->left->key)
-        return rightRotate(node);
- 
-    // Right Right Case
-    if (balance < -1 && key > node->right->key)
-        return leftRotate(node);
- 
-    // Left Right Case
-    if (balance > 1 && key > node->left->key) {
-        node->left = leftRotate(node->left);
-        return rightRotate(node);
-    }
- 
-    // Right Left Case
-    if (balance < -1 && key < node->right->key) {
-        node->right = rightRotate(node->right);
-        return leftRotate(node);
-    }
- 
-    /* return the (unchanged) node pointer */
+
     return node;
 }
- 
-// A utility function to print preorder traversal of the tree.
-// The function also prints height of every node
-void preOrder(struct node *root) {
-    if (root != NULL) {
-        printf("%d ", root->key);
-        preOrder(root->left);
-        preOrder(root->right);
+
+BST *bst_create() {
+    BST *bst = malloc(sizeof(BST));
+    bst->root = NULL;
+    bst->size = 0;
+
+    return bst;
+}
+
+static void node_insert(Node *current, int value) {
+    if(value < current->value) {
+        if(current->left == NULL){
+            current->left = node_create(value);
+        }
+        else {
+            node_insert(current->left, value);
+        }
+    }
+    else {
+        if(current->right == NULL){
+            current->right = node_create(value);
+        }
+        else {
+            node_insert(current->right, value);
+        }
     }
 }
- 
-/* Drier program to test above function*/
-int main() {
-    struct node *root = NULL;
- 
-    /* Constructing tree given in the above figure */
-    root = insert(root, 10);
-    root = insert(root, 20);
-    root = insert(root, 30);
-    root = insert(root, 40);
-    root = insert(root, 50);
-    root = insert(root, 25);
- 
-    /* The constructed AVL Tree would be
-      30
-     /  \
-   20   40
-  /  \     \
-10  25    50
-     */
- 
-    printf("Pre order traversal of the constructed Balanced Binary tree is \n");
-    preOrder(root);
- 
-    return 0;
+
+void bst_insert(BST *bst, int value) {
+    if(bst->root == NULL)
+        bst->root = node_create(value);
+    else
+        node_insert(bst->root, value);
+    bst->size++;
+}
+
+static bool node_erase(Node* parent, Node *current, int value){
+    if(current == NULL){
+        return false;
+    }
+
+    if(value < current->value) {
+        return node_erase(current, current->left, value);
+    }
+    else if (value > current->value) {
+        return node_erase(current, current->right, value);
+    }
+    else {
+        // CASE 1: LEAF NODE
+        if(current->left == NULL && current->right == NULL){
+            if(parent->value > current->value){
+                free(parent->left);
+                parent->left = NULL;
+                return true;
+            }
+            else {
+                free(parent->right);
+                parent->right = NULL;
+                return true;
+            }
+        }
+        // CASE 2: NODE WITH ONE CHILD
+        else if(current->left == NULL || current->right == NULL){
+            if(parent->value > current->value){
+                parent->left = current->left == NULL ? current->right : current->left;
+            }
+            else {
+                parent->right = current->left == NULL ? current->right : current->left;
+            }
+
+            free(current);
+            return true;
+        }
+        // CASE 3: NODE WITH TWO CHILDREN
+        else {
+            Node *next = current->right, *nextParent = current;
+            while(next->left != NULL){
+                nextParent = next;
+                next = next->left;
+            }
+
+            current->value = next->value;
+            return node_erase(nextParent, next, next->value);
+        }
+    }
+
+    return false;
+}
+
+void bst_erase(BST *bst, int value) {
+    Node sentinel = {.value = INT_MIN, .left = NULL, .right = bst->root};
+    if(node_erase(&sentinel, bst->root, value)) {
+        bst->size--;
+    };
+    bst->root = sentinel.right;
+}
+
+static void node_at(Node* current, int index, int *pos, int *res) {
+    if(current == NULL)
+        return;
+
+    node_at(current->left, index, pos, res); 
+    if(((*pos)++) == index) {
+        *res = current->value;
+        return;
+    }
+
+    node_at(current->right, index, pos, res);
+}
+
+int bst_at(BST *bst, int index) {
+    int pos = 0, res = 0;
+    node_at(bst->root, index, &pos, &res);
+    return res;
+}
+
+static void node_fill_array(Node *arr[], int *pos, Node **current) {
+    if(*current == NULL)
+        return;
+
+    node_fill_array(arr, pos, &((*current)->left));
+    arr[(*pos)++] = *current;
+    node_fill_array(arr, pos, &((*current)->right));
+}
+
+static void node_balance(Node *arr[], int l, int r, Node *current) {
+    if(current == NULL){
+        return;
+    }
+
+    int mid = (l + r) / 2;
+    current->left = arr[(l + mid) / 2];
+    arr[(l + mid) / 2] = NULL;
+    current->right = arr[((mid + 1) + r) / 2];
+    arr[((mid + 1) + r) / 2] = NULL;
+
+    node_balance(arr, l, mid, current->left);
+    node_balance(arr, mid + 1, r, current->right);
+}
+
+void bst_balance(BST* bst) {
+    Node* sorted[bst->size];
+    int pos = 0, mid = (bst->size - 1) / 2;
+    node_fill_array(sorted, &pos, &bst->root);
+    for(int i = 0; i < pos; i++) {
+        sorted[i]->left = NULL;
+        sorted[i]->right = NULL;
+    }
+
+    bst->root = sorted[mid];
+    sorted[mid] = NULL;
+    node_balance(sorted, 0, bst->size - 1, bst->root);
+}
+
+static void node_destroy(Node *current) {
+    if(current == NULL)
+        return;
+    node_destroy(current->left);
+    node_destroy(current->right); 
+    free(current);
+}
+
+void bst_destroy(BST* bst) {
+    node_destroy(bst->root);
+    free(bst);
 }
