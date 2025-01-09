@@ -148,6 +148,10 @@ int bst_at(BST *bst, int index) {
     return res;
 }
 
+int bst_size(BST *bst) {
+    return bst->size;
+}
+
 static void node_fill_array(Node *arr[], int *pos, Node **current) {
     if(*current == NULL)
         return;

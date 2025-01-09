@@ -62,6 +62,24 @@ void test_bst_erase() {
     printf("test_bst_erase passed\n");
 }
 
+void test_bst_size() {
+    BST *bst = bst_create();
+    bst_insert(bst, 20);
+    bst_insert(bst, 10);
+    bst_insert(bst, 30);
+    bst_insert(bst, 25);
+    bst_insert(bst, 35);
+
+    bst_erase(bst, 10);
+    bst_erase(bst, 30);
+    bst_erase(bst, 20);
+
+    assert(bst_size(bst) == 2);
+
+    bst_destroy(bst);
+    printf("test_bst_size passed\n");
+}
+
 void test_bst_balance() {
     BST *bst = bst_create();
     bst_insert(bst, 10);
@@ -96,7 +114,7 @@ int main() {
     test_bst_at();
     test_bst_erase();
     test_bst_balance();
-    // test_bst_destroy();
+    test_bst_destroy();
     printf("All tests passed!\n");
     return 0;
 }
