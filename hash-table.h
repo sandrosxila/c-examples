@@ -16,7 +16,6 @@ typedef struct HashTable HashTable;
 typedef struct HashTableIterator HashTableIterator;
 
 HashTable *hash_table_create();
-Item *item_create(const char *key, int value);
 int hash_table_get(HashTable *hashTable, const char *key);
 bool hash_table_set(HashTable *hashTable, const char *key, int value);
 bool hash_table_exists(HashTable *hashTable, const char *key);
